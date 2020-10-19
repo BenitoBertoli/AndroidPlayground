@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 }
@@ -41,6 +42,10 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:$versions.firebaseBom")
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    implementation "com.google.dagger:dagger-android-support:$versions.dagger"
+    kapt "com.google.dagger:dagger-android-processor:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 
     testImplementation "junit:junit:$versions.junit"
 }

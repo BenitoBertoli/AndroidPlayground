@@ -1,7 +1,8 @@
-package com.benitobertoli.androidplayground
+package com.benitobertoli.androidplayground.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.benitobertoli.androidplayground.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
