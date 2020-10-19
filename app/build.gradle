@@ -16,6 +16,7 @@ android {
         targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -42,6 +43,7 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:$versions.firebaseBom")
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation "androidx.multidex:multidex:$versions.multidex"
 
     // network
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
