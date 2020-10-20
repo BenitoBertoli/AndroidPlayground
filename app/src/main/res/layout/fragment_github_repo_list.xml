@@ -10,9 +10,10 @@
         app:liftOnScroll="true">
 
         <androidx.appcompat.widget.Toolbar
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:title="@string/github_repo_list_toolbar_title"/>
+            app:title="@string/github_repo_list_toolbar_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
