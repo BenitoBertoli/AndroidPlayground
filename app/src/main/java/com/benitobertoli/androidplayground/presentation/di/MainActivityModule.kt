@@ -7,7 +7,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 interface MainActivityModule {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [RepoListFragmentModule::class])
     fun contributeGithubRepoListFragment(): GithubRepoListFragment
 
 }

@@ -20,10 +20,14 @@ ext.versions = [
         okhttp               : '4.9.0',
         rxJava               : '2.2.20',
         rxAndroid            : '2.1.1',
+        rxKotlin             : '2.4.0',
         navigation           : '2.3.1',
+        lifecycle            : '2.2.0',
+        arch                 : '2.1.0',
 
         junit                : '4.13.1',
         firebaseBom          : '25.12.0',
         truth                : '1.0',
-        mockitoKotlin        : '2.2.0'
+        mockitoKotlin        : '2.2.0',
+        liveDataTesting      : '1.1.2'
 ]

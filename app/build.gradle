@@ -53,10 +53,15 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
     implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
+    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
 
     // ui
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.navigation"
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigation"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
 
     // di
     implementation "com.google.dagger:dagger:$versions.dagger"
@@ -68,4 +73,6 @@ dependencies {
     testImplementation "junit:junit:$versions.junit"
     testImplementation "com.google.truth:truth:$versions.truth"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockitoKotlin"
+    testImplementation "androidx.arch.core:core-testing:$versions.arch"
+    testImplementation "com.jraska.livedata:testing-ktx:$versions.liveDataTesting"
 }
