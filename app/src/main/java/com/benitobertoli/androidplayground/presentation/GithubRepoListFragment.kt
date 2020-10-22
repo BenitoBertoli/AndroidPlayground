@@ -46,7 +46,7 @@ class GithubRepoListFragment : DaggerFragment() {
             state?.let {
                 when (it) {
                     is RepoListState.Loading -> {
-
+                        // todo
                     }
 
                     is RepoListState.Content -> {
@@ -54,7 +54,7 @@ class GithubRepoListFragment : DaggerFragment() {
                     }
 
                     is RepoListState.Error -> {
-
+                        // todo
                     }
                 }
             }

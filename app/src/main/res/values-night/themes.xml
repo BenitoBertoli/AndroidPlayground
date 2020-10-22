@@ -3,6 +3,7 @@
         <item name="colorPrimary">@color/github_grey</item>
         <item name="colorPrimaryVariant">@color/github_grey</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/github_blue_300</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>

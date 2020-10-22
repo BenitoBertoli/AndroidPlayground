@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.benitobertoli.androidplayground.databinding.ItemRepositoryBinding
 import com.benitobertoli.androidplayground.domain.model.Repo
+import com.benitobertoli.androidplayground.presentation.toHumanReadableCount
 
 class RepoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -19,7 +20,12 @@ class RepoListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val repo = repositories[position]
         ItemRepositoryBinding.bind(holder.itemView).apply {
+            ownerAvatar.setImageURI(repo.owner.smallAvatar)
+            ownerName.text = repo.owner.name
             repoName.text = repo.name
+            repoDescription.text = repo.description
+            stars.text = repo.stars.toHumanReadableCount()
+            language.text = repo.language
         }
     }
 
