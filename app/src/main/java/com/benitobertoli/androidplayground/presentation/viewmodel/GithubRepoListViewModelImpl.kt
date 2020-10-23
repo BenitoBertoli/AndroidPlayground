@@ -2,7 +2,9 @@ package com.benitobertoli.androidplayground.presentation.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.rxjava2.cachedIn
 import com.benitobertoli.androidplayground.domain.model.Repo
 import com.benitobertoli.androidplayground.domain.repository.GithubRepository
 import io.reactivex.disposables.CompositeDisposable
@@ -19,9 +21,10 @@ class GithubRepoListViewModelImpl
     override val pagingData = MutableLiveData<PagingData<Repo>>()
 
     override fun getRepositories() {
-        githubRepository.getRepositories().subscribeBy {
-            pagingData.value = it
-        }.addTo(compositeDisposable)
+        githubRepository.getRepositories()
+            .subscribeBy {
+                pagingData.value = it
+            }.addTo(compositeDisposable)
     }
 
     override fun onCleared() {

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="@dimen/space_normal">
+
+    <ProgressBar
+        android:id="@+id/loadingProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleSmall"
+        tools:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/loadingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:layout_marginStart="@dimen/space_small"
+        tools:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/loadingErrorMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/loading_retry_error_message"
+        android:layout_marginStart="@dimen/space_small"/>
+
+    <Button
+        android:id="@+id/loadingRetryBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_retry_btn_text"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textColor="?colorSecondary"/>
+
+</LinearLayout>

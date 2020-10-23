@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.benitobertoli.androidplayground.databinding.FragmentGithubRepoListBinding
 import com.benitobertoli.androidplayground.presentation.adapter.RepoListAdapter
+import com.benitobertoli.androidplayground.presentation.adapter.RepoListLoadStateAdapter
 import com.benitobertoli.androidplayground.presentation.viewmodel.GithubRepoListViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -32,8 +33,8 @@ class GithubRepoListFragment : DaggerFragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        binding.recyclerView.adapter = adapter.withLoadStateFooter(RepoListLoadStateAdapter { adapter.retry() })
         adapter.addLoadStateListener { handleLoadStates(it) }
-        binding.recyclerView.adapter = adapter
 
         binding.retryButton.setOnClickListener { repoListViewModel.getRepositories() }
 
