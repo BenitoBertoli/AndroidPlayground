@@ -28,6 +28,7 @@ class RepoMapperTest {
             33712,
             4198,
             "Kotlin",
+            "https://kotlinglang.org",
             ownerDto
         )
 
@@ -43,6 +44,7 @@ class RepoMapperTest {
             assertThat(stars).isEqualTo(repo.stars)
             assertThat(forks).isEqualTo(repo.forks)
             assertThat(language).isEqualTo(repo.language)
+            assertThat(homepage).isEqualTo(repo.homepage)
             assertThat(owner).isEqualTo(expectedOwner)
             verify(ownerMapper).map(repo.owner)
         }

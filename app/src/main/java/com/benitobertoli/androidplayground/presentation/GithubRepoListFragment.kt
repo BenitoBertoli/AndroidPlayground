@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.benitobertoli.androidplayground.databinding.FragmentGithubRepoListBinding
@@ -22,21 +23,18 @@ class GithubRepoListFragment : DaggerFragment() {
     @Inject
     lateinit var repoListViewModel: GithubRepoListViewModel
 
-    private val adapter = RepoListAdapter()
+    private val adapter = RepoListAdapter { repo ->
+        findNavController().navigate(GithubRepoListFragmentDirections.actionGithubRepoListFragmentToGithubRepoDetailsFragment(repo))
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGithubRepoListBinding.inflate(layoutInflater)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         binding.recyclerView.adapter = adapter
 
-
-        binding.retryButton.setOnClickListener {  repoListViewModel.getRepositories() }
+        binding.retryButton.setOnClickListener { repoListViewModel.getRepositories() }
 
         return binding.root
     }
