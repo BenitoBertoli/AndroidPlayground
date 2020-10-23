@@ -26,6 +26,7 @@ ext.versions = [
         lifecycle            : '2.2.0',
         arch                 : '2.1.0',
         fresco               : '2.3.0',
+        paging               : '3.0.0-alpha07',
 
         junit                : '4.13.1',
         firebaseBom          : '25.12.0',

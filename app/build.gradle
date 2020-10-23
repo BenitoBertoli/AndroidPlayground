@@ -79,6 +79,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
 
+    implementation "androidx.paging:paging-runtime-ktx:$versions.paging"
+    implementation "androidx.paging:paging-rxjava2-ktx:$versions.paging"
+
     // di
     implementation "com.google.dagger:dagger:$versions.dagger"
     implementation "com.google.dagger:dagger-android-support:$versions.dagger"

@@ -2,9 +2,9 @@ package com.benitobertoli.androidplayground.presentation.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.benitobertoli.androidplayground.core.AppSchedulers
+import androidx.paging.PagingData
+import com.benitobertoli.androidplayground.domain.model.Repo
 import com.benitobertoli.androidplayground.domain.repository.GithubRepository
-import com.benitobertoli.androidplayground.presentation.model.RepoListState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -12,33 +12,16 @@ import javax.inject.Inject
 
 class GithubRepoListViewModelImpl
 @Inject constructor(
-    private val githubRepository: GithubRepository,
-    private val schedulers: AppSchedulers
+    private val githubRepository: GithubRepository
 ) : GithubRepoListViewModel, ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    override val state = MutableLiveData<RepoListState>()
+    override val pagingData = MutableLiveData<PagingData<Repo>>()
 
     override fun getRepositories() {
-        githubRepository.getRepositories()
-            .subscribeOn(schedulers.backgroundScheduler)
-            .observeOn(schedulers.foregroundScheduler)
-            .doOnSubscribe { state.postValue(RepoListState.Loading) }
-            .subscribeBy(
-                onSuccess = {
-                    it.fold(
-                        success = { repos ->
-                            state.postValue(RepoListState.Content(repos))
-                        },
-                        failure = {
-                            state.postValue(RepoListState.Error)
-                        }
-                    )
-                },
-                onError = {
-                    state.postValue(RepoListState.Error)
-                }
-            ).addTo(compositeDisposable)
+        githubRepository.getRepositories().subscribeBy {
+            pagingData.value = it
+        }.addTo(compositeDisposable)
     }
 
     override fun onCleared() {
