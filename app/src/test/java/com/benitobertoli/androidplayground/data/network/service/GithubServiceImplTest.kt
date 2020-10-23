@@ -18,9 +18,7 @@ class GithubServiceImplTest {
 
         val expectedResponse = mock<RepoSearchResponse>()
         whenever(githubApi.searchRepositories(anyInt(), anyInt())).thenReturn(
-            Single.just(
-                expectedResponse
-            )
+            Single.just(expectedResponse)
         )
 
         sut.searchRepositories().test()

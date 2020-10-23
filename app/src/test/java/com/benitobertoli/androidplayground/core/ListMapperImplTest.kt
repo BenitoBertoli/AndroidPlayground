@@ -2,7 +2,6 @@ package com.benitobertoli.androidplayground.core
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
