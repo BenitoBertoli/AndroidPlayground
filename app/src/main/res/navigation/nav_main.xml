@@ -9,5 +9,18 @@
         android:id="@+id/githubRepoListFragment"
         android:name="com.benitobertoli.androidplayground.presentation.GithubRepoListFragment"
         android:label="GithubRepoListFragment"
-        tools:layout="@layout/fragment_github_repo_list"/>
+        tools:layout="@layout/fragment_github_repo_list">
+        <action
+            android:id="@+id/action_githubRepoListFragment_to_githubRepoDetailsFragment"
+            app:destination="@id/githubRepoDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/githubRepoDetailsFragment"
+        android:name="com.benitobertoli.androidplayground.presentation.GithubRepoDetailsFragment"
+        android:label="GithubRepoDetailsFragment"
+        tools:layout="@layout/fragment_repository_details" >
+        <argument
+            android:name="repository"
+            app:argType="com.benitobertoli.androidplayground.domain.model.Repo" />
+    </fragment>
 </navigation>

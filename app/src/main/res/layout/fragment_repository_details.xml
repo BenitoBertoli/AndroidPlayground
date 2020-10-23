@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?colorPrimary">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:liftOnScroll="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:navigationIcon="@drawable/ic_arrow_left_24"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ownerAvatar"
+            android:layout_width="@dimen/avatar_small"
+            android:layout_height="@dimen/avatar_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/space_normal"
+            android:layout_marginStart="@dimen/space_normal"
+            app:roundedCornerRadius="@dimen/avatar_corner_radius"
+            tools:background="@color/github_grey" />
+
+        <TextView
+            android:id="@+id/ownerName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/ownerAvatar"
+            app:layout_constraintBottom_toBottomOf="@id/ownerAvatar"
+            app:layout_constraintTop_toTopOf="@id/ownerAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="JetBrains"
+            android:layout_marginStart="@dimen/space_tiny" />
+
+
+        <TextView
+            android:id="@+id/repoName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ownerName"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_small"
+            tools:text="kotlin"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/repoDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/repoName"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_small"
+            tools:text="The Kotlin Programming Language"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:maxLines="5"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/repoHomepage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:textStyle="bold"
+            tools:text="https://kotlinlang.org"
+            app:layout_constraintTop_toBottomOf="@id/repoDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_normal"
+            app:drawableStartCompat="@drawable/ic_link_16"
+            app:drawableTint="@color/github_grey_500"
+            android:drawablePadding="@dimen/space_small" />
+
+        <TextView
+            android:id="@+id/stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_small"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/space_small"
+            app:drawableStartCompat="@drawable/ic_star_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/repoHomepage"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="33.7k" />
+
+        <TextView
+            android:id="@+id/forks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/repoHomepage"
+            app:layout_constraintStart_toEndOf="@id/stars"
+            android:layout_marginStart="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_small"
+            tools:text="4.2k"
+            app:drawableStartCompat="@drawable/ic_repo_forked_16"
+            android:drawablePadding="@dimen/space_small"
+            android:gravity="center_vertical"
+            style="@style/TextAppearance.MaterialComponents.Body1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

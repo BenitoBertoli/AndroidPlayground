@@ -10,5 +10,6 @@ data class RepoDto(
     @SerializedName("stargazers_count") val stars: Long,
     @SerializedName("forks_count") val forks: Long,
     @SerializedName("language") val language: String?,
+    @SerializedName("homepage") val homepage: String?,
     @SerializedName("owner") val owner: OwnerDto
 )

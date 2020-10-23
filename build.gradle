@@ -10,6 +10,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
         classpath "com.google.gms:google-services:$versions.googleServices"
         classpath "com.google.firebase:firebase-crashlytics-gradle:$versions.crashlyticsGradle"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.safeArgsPlugin"
     }
 }
 

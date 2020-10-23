@@ -71,7 +71,6 @@
         tools:text="33.7k"
         app:drawableStartCompat="@drawable/ic_star_fill_16"
         android:drawablePadding="@dimen/space_tiny"
-        app:drawableTint="@color/github_yellow"
         android:gravity="center_vertical" />
 
     <TextView
@@ -85,7 +84,6 @@
         tools:text="Kotlin"
         app:drawableStartCompat="@drawable/ic_code_16"
         android:drawablePadding="@dimen/space_tiny"
-        app:drawableTint="?colorSecondary"
         android:gravity="center_vertical" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
