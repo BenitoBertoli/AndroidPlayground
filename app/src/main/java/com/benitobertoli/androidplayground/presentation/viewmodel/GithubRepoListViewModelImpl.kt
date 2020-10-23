@@ -11,19 +11,19 @@ import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 class GithubRepoListViewModelImpl
-
 @Inject constructor(
     private val githubRepository: GithubRepository,
     private val schedulers: AppSchedulers
 ) : GithubRepoListViewModel, ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    override val state = MutableLiveData<RepoListState>(RepoListState.Loading)
+    override val state = MutableLiveData<RepoListState>()
 
     override fun getRepositories() {
         githubRepository.getRepositories()
             .subscribeOn(schedulers.backgroundScheduler)
             .observeOn(schedulers.foregroundScheduler)
+            .doOnSubscribe { state.postValue(RepoListState.Loading) }
             .subscribeBy(
                 onSuccess = {
                     it.fold(

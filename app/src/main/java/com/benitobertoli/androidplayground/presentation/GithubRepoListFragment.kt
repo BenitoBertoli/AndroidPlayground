@@ -36,6 +36,8 @@ class GithubRepoListFragment : DaggerFragment() {
         binding.recyclerView.adapter = adapter
 
 
+        binding.retryButton.setOnClickListener {  repoListViewModel.getRepositories() }
+
         return binding.root
     }
 
@@ -46,15 +48,16 @@ class GithubRepoListFragment : DaggerFragment() {
             state?.let {
                 when (it) {
                     is RepoListState.Loading -> {
-                        // todo
+                        binding.viewFlipper.displayedChild = INDEX_LOADING
                     }
 
                     is RepoListState.Content -> {
+                        binding.viewFlipper.displayedChild = INDEX_CONTENT
                         setRepositories(it.repositories)
                     }
 
                     is RepoListState.Error -> {
-                        // todo
+                        binding.viewFlipper.displayedChild = INDEX_ERROR
                     }
                 }
             }
@@ -66,5 +69,11 @@ class GithubRepoListFragment : DaggerFragment() {
 
     private fun setRepositories(repos: List<Repo>) {
         adapter.setRepositories(repos)
+    }
+
+    private companion object {
+        const val INDEX_LOADING = 0
+        const val INDEX_ERROR = 1
+        const val INDEX_CONTENT = 2
     }
 }
