@@ -1,9 +1,9 @@
 package com.benitobertoli.androidplayground.domain.repository
 
-import com.benitobertoli.androidplayground.core.SimpleResult
+import androidx.paging.PagingData
 import com.benitobertoli.androidplayground.domain.model.Repo
-import io.reactivex.Single
+import io.reactivex.Flowable
 
 interface GithubRepository {
-    fun getRepositories(): Single<SimpleResult<List<Repo>>>
+    fun getRepositories(): Flowable<PagingData<Repo>>
 }

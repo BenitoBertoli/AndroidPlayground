@@ -6,10 +6,14 @@ import com.benitobertoli.androidplayground.presentation.viewmodel.GithubRepoList
 import com.benitobertoli.androidplayground.presentation.viewmodel.factory.getViewModel
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Provider
 
 @Module
 object RepoListFragmentModule {
+
+    @Provides
+    fun provideCoroutineScope(): CoroutineScope? = null
 
     @Provides
     fun provideViewModel(

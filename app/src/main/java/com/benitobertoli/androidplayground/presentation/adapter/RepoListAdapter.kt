@@ -2,24 +2,22 @@ package com.benitobertoli.androidplayground.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.benitobertoli.androidplayground.databinding.ItemRepositoryBinding
 import com.benitobertoli.androidplayground.domain.model.Repo
 import com.benitobertoli.androidplayground.presentation.setTextOrHide
 import com.benitobertoli.androidplayground.presentation.toHumanReadableCount
 
-class RepoListAdapter(val clickAction: (Repo) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val repositories = mutableListOf<Repo>()
-
-    override fun getItemCount(): Int = repositories.size
+class RepoListAdapter(val clickAction: (Repo) -> Unit) : PagingDataAdapter<Repo, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RepoViewHolder(ItemRepositoryBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val repo = repositories[position]
+        val repo = getItem(position) ?: return
         ItemRepositoryBinding.bind(holder.itemView).apply {
             ownerAvatar.setImageURI(repo.owner.smallAvatar)
             ownerName.text = repo.owner.name
@@ -34,9 +32,13 @@ class RepoListAdapter(val clickAction: (Repo) -> Unit) : RecyclerView.Adapter<Re
     class RepoViewHolder(viewBinding: ItemRepositoryBinding) :
         RecyclerView.ViewHolder(viewBinding.root)
 
-    fun setRepositories(repos: List<Repo>) {
-        repositories.clear()
-        repositories.addAll(repos)
-        notifyDataSetChanged()
+    companion object {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<Repo>() {
+            override fun areItemsTheSame(oldItem: Repo, newItem: Repo): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Repo, newItem: Repo): Boolean =
+                oldItem == newItem
+        }
     }
 }

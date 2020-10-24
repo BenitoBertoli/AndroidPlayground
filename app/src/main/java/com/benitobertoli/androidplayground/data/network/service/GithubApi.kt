@@ -10,7 +10,7 @@ interface GithubApi {
     @GET("search/repositories?q=kotlin+in:name,description&sort=stars")
     fun searchRepositories(
         @Query("page") page: Int? = null,
-        @Query("per_page") perPage: Int? = null
+        @Query("per_page") perPage: Int? = 30
     ): Single<RepoSearchResponse>
 
 }

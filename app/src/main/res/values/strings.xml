@@ -3,4 +3,5 @@
     <string name="github_repo_list_toolbar_title">Kotlin Repositories</string>
     <string name="loading_retry_btn_text">Retry</string>
     <string name="loading_retry_error_message">An error occurred. Please try again later</string>
+    <string name="loading">Loading…</string>
 </resources>

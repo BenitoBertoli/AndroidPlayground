@@ -1,12 +1,11 @@
 package com.benitobertoli.androidplayground.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
-import com.benitobertoli.androidplayground.presentation.model.RepoListState
+import androidx.paging.PagingData
+import com.benitobertoli.androidplayground.domain.model.Repo
 
 interface GithubRepoListViewModel {
+    val pagingData: LiveData<PagingData<Repo>>
 
-    val state: LiveData<RepoListState>
-
-    fun getRepositories()
-
+    fun getRepositories(refresh: Boolean = false)
 }

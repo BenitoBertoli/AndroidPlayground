@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.benitobertoli.androidplayground.databinding.FragmentGithubRepoListBinding
-import com.benitobertoli.androidplayground.domain.model.Repo
 import com.benitobertoli.androidplayground.presentation.adapter.RepoListAdapter
-import com.benitobertoli.androidplayground.presentation.model.RepoListState
+import com.benitobertoli.androidplayground.presentation.adapter.RepoListLoadStateAdapter
 import com.benitobertoli.androidplayground.presentation.viewmodel.GithubRepoListViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -32,9 +33,10 @@ class GithubRepoListFragment : DaggerFragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter.withLoadStateFooter(RepoListLoadStateAdapter { adapter.retry() })
+        adapter.addLoadStateListener { handleLoadStates(it) }
 
-        binding.retryButton.setOnClickListener { repoListViewModel.getRepositories() }
+        binding.retryButton.setOnClickListener { repoListViewModel.getRepositories(refresh = true) }
 
         return binding.root
     }
@@ -42,31 +44,21 @@ class GithubRepoListFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        repoListViewModel.state.observe(viewLifecycleOwner, Observer { state ->
-            state?.let {
-                when (it) {
-                    is RepoListState.Loading -> {
-                        binding.viewFlipper.displayedChild = INDEX_LOADING
-                    }
-
-                    is RepoListState.Content -> {
-                        binding.viewFlipper.displayedChild = INDEX_CONTENT
-                        setRepositories(it.repositories)
-                    }
-
-                    is RepoListState.Error -> {
-                        binding.viewFlipper.displayedChild = INDEX_ERROR
-                    }
-                }
-            }
-
+        repoListViewModel.pagingData.observe(viewLifecycleOwner, Observer {
+            it?.let { adapter.submitData(lifecycle, it) }
         })
 
         repoListViewModel.getRepositories()
+
+        binding.viewFlipper.displayedChild = INDEX_CONTENT
     }
 
-    private fun setRepositories(repos: List<Repo>) {
-        adapter.setRepositories(repos)
+    private fun handleLoadStates(loadState: CombinedLoadStates) {
+        when (loadState.source.refresh) {
+            is LoadState.NotLoading -> binding.viewFlipper.displayedChild = INDEX_CONTENT
+            is LoadState.Loading -> binding.viewFlipper.displayedChild = INDEX_LOADING
+            is LoadState.Error -> binding.viewFlipper.displayedChild = INDEX_ERROR
+        }
     }
 
     private companion object {

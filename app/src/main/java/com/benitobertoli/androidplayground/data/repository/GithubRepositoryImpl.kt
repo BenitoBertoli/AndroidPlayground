@@ -1,25 +1,31 @@
 package com.benitobertoli.androidplayground.data.repository
 
-import com.benitobertoli.androidplayground.core.ListMapper
-import com.benitobertoli.androidplayground.core.SimpleResult
-import com.benitobertoli.androidplayground.data.network.dto.RepoDto
-import com.benitobertoli.androidplayground.data.network.service.GithubService
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.rxjava2.flowable
 import com.benitobertoli.androidplayground.domain.model.Repo
 import com.benitobertoli.androidplayground.domain.repository.GithubRepository
-import io.reactivex.Single
+import io.reactivex.Flowable
 import javax.inject.Inject
 
 class GithubRepositoryImpl
 @Inject constructor(
-    private val githubService: GithubService,
-    private val repoListMapper: ListMapper<RepoDto, Repo>
+    private val githubRepoPagingSource: PagingSource<Int, Repo>
 ) : GithubRepository {
-    override fun getRepositories(): Single<SimpleResult<List<Repo>>> {
-        return githubService.searchRepositories()
-            .map { result ->
-                result.map {
-                    repoListMapper.map(it.items)
-                }
-            }
+
+    companion object {
+        private const val PAGE_SIZE = 30
+    }
+
+    override fun getRepositories(): Flowable<PagingData<Repo>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { githubRepoPagingSource }
+        ).flowable
     }
 }
