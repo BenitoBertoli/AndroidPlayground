@@ -7,5 +7,5 @@ import com.benitobertoli.androidplayground.domain.model.Repo
 interface GithubRepoListViewModel {
     val pagingData: LiveData<PagingData<Repo>>
 
-    fun getRepositories()
+    fun getRepositories(refresh: Boolean = false)
 }

@@ -36,7 +36,7 @@ class GithubRepoListFragment : DaggerFragment() {
         binding.recyclerView.adapter = adapter.withLoadStateFooter(RepoListLoadStateAdapter { adapter.retry() })
         adapter.addLoadStateListener { handleLoadStates(it) }
 
-        binding.retryButton.setOnClickListener { repoListViewModel.getRepositories() }
+        binding.retryButton.setOnClickListener { repoListViewModel.getRepositories(refresh = true) }
 
         return binding.root
     }
