@@ -26,7 +26,7 @@ class GithubRepoPagingSourceTest {
 
     @Test
     fun `loadSingle SHOULD return the correct Page params WHEN it is the first page`() {
-        val loadParams = PagingSource.LoadParams.Refresh<Int>(null, 30, false, 30)
+        val loadParams = PagingSource.LoadParams.Refresh<Int>(null, 30, false)
 
         val item1 = mock<RepoDto>()
         val item2 = mock<RepoDto>()
@@ -51,7 +51,7 @@ class GithubRepoPagingSourceTest {
 
     @Test
     fun `loadSingle SHOULD return the correct Page params WHEN it is not the first page`() {
-        val loadParams = PagingSource.LoadParams.Append(3, 30, false, 30)
+        val loadParams = PagingSource.LoadParams.Append(3, 30, false)
 
         val item1 = mock<RepoDto>()
         val item2 = mock<RepoDto>()
@@ -75,8 +75,8 @@ class GithubRepoPagingSourceTest {
     }
 
     @Test
-    fun `loadSingle SHOULD return Page with a null nextKey WHEN it is there are no more items`() {
-        val loadParams = PagingSource.LoadParams.Append(2, 30, false, 30)
+    fun `loadSingle SHOULD return Page with a null nextKey WHEN there are no more items`() {
+        val loadParams = PagingSource.LoadParams.Append(2, 30, false)
 
         mockRepos(emptyList(), emptyList())
 
@@ -94,7 +94,7 @@ class GithubRepoPagingSourceTest {
 
     @Test
     fun `loadSingle SHOULD return Error WHEN the api call fails`() {
-        val loadParams = PagingSource.LoadParams.Append(2, 30, false, 30)
+        val loadParams = PagingSource.LoadParams.Append(2, 30, false)
 
         val expectedError: Throwable = mock()
         whenever(githubApi.searchRepositories(anyInt(), anyInt())).thenReturn(
