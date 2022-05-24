@@ -14,7 +14,7 @@ class GithubRepoDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentRepositoryDetailsBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentRepositoryDetailsBinding.inflate(layoutInflater)
         val repository = arguments?.let { args ->
             GithubRepoDetailsFragmentArgs.fromBundle(args).repository

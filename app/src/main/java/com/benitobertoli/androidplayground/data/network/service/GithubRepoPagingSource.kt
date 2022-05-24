@@ -1,5 +1,6 @@
 package com.benitobertoli.androidplayground.data.network.service
 
+import androidx.paging.PagingState
 import androidx.paging.rxjava2.RxPagingSource
 import com.benitobertoli.androidplayground.core.AppSchedulers
 import com.benitobertoli.androidplayground.core.ListMapper
@@ -34,5 +35,9 @@ constructor(
             .onErrorReturn {
                 LoadResult.Error(it)
             }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, Repo>): Int? {
+        return state.anchorPosition
     }
 }

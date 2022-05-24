@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
+@Suppress("UNCHECKED_CAST")
 class ViewModelFactory {
 
     fun <T : ViewModel> getViewModel(
@@ -11,13 +12,13 @@ class ViewModelFactory {
         provideViewModel: () -> T,
         viewModelClass: Class<T>
     ): T {
-        return ViewModelProvider(fragment, Factory(provideViewModel)).get(viewModelClass)
+        return ViewModelProvider(fragment, Factory(provideViewModel))[viewModelClass]
     }
 
     private class Factory<T : ViewModel>(
         private val createViewModel: () -> T
     ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return createViewModel() as T
         }
     }
