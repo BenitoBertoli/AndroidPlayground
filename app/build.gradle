@@ -20,6 +20,12 @@ android {
         versionName "1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -39,6 +45,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+
 }
 
 dependencies {
@@ -51,6 +58,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation "androidx.multidex:multidex:$versions.multidex"
+
+    implementation "androidx.room:room-runtime:$versions.room"
+    kapt "androidx.room:room-compiler:$versions.room"
+    implementation "androidx.room:room-rxjava2:$versions.room"
+    implementation "androidx.room:room-paging:$versions.roomPaging"
 
     // network
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
@@ -95,4 +107,16 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$versions.arch"
     testImplementation "com.jraska.livedata:testing-ktx:$versions.liveDataTesting"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutinesTest"
+
+
+    androidTestImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "androidx.test:core:$versions.androidXTest"
+    androidTestImplementation "androidx.test:core-ktx:$versions.androidXTest"
+    androidTestImplementation "androidx.test:runner:$versions.androidXTest"
+    androidTestImplementation "androidx.test:rules:$versions.androidXTest"
+    androidTestImplementation "androidx.arch.core:core-testing:$versions.arch"
+    androidTestImplementation "com.google.truth:truth:$versions.truth"
+    androidTestImplementation "androidx.room:room-testing:$versions.room"
+
+
 }
