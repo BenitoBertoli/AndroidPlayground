@@ -117,6 +117,6 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$versions.arch"
     androidTestImplementation "com.google.truth:truth:$versions.truth"
     androidTestImplementation "androidx.room:room-testing:$versions.room"
-
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutinesTest"
 
 }
