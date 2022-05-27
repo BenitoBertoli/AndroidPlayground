@@ -19,3 +19,10 @@ object OwnerContract {
     const val NAME = "owner_name"
     const val AVATAR = "owner_avatar"
 }
+
+object RemoteKeysContract {
+    const val TABLE_NAME = "remote_keys"
+    const val REPO_ID = "repo_id"
+    const val PREV_KEY = "prev_key"
+    const val NEXT_KEY = "next_key"
+}

@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.benitobertoli.androidplayground.data.persistence.OwnerContract
 import com.benitobertoli.androidplayground.data.persistence.RepoContract
-import com.benitobertoli.androidplayground.data.persistence.entity.OwnerEntity
 import com.benitobertoli.androidplayground.data.persistence.entity.RepoEntity
 import com.benitobertoli.androidplayground.data.persistence.entity.RepoWithOwner
 import io.reactivex.Maybe
@@ -32,22 +31,14 @@ interface RepoDao {
                 "own.${OwnerContract.ID} "
     }
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(repo: RepoEntity): Maybe<Long>
+    fun insert(repo: RepoEntity): Long
 
     @Query(
         QUERY_SELECT_REPO_W_OWNER +
                 " WHERE rep.${RepoContract.ID} = :id"
     )
     fun findById(id: Long): Maybe<RepoWithOwner>
-
-    @Query(
-        "SELECT * FROM ${RepoContract.TABLE_NAME} " +
-                "JOIN ${OwnerContract.TABLE_NAME} ON ${RepoContract.TABLE_NAME}.${RepoContract.OWNER_ID} = " +
-                "${OwnerContract.TABLE_NAME}.${OwnerContract.ID} "
-    )
-    fun loadRepoAndOwner(): Maybe<Map<RepoEntity, OwnerEntity>>
 
     @Query(QUERY_SELECT_REPO_W_OWNER)
     fun pagingSource(): PagingSource<Int, RepoWithOwner>

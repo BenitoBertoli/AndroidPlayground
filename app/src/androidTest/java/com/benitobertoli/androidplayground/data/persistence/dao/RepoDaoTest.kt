@@ -2,19 +2,12 @@ package com.benitobertoli.androidplayground.data.persistence.dao
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.PagingSource
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
 import com.benitobertoli.androidplayground.data.persistence.entity.OwnerEntity
 import com.benitobertoli.androidplayground.data.persistence.entity.RepoEntity
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -74,14 +67,16 @@ class RepoDaoTest {
     @Test
     @Throws(Exception::class)
     fun writeRepo() {
-        sut.insert(repo).test().assertValue(repo.id)
+        val result = sut.insert(repo)
+
+        assertThat(result).isEqualTo(repo.id)
     }
 
     @Test
     @Throws(Exception::class)
     fun findById() {
-        ownerDao.insert(owner).test().assertValue(owner.id)
-        sut.insert(repo).test().assertValue(repo.id)
+        ownerDao.insert(owner)
+        sut.insert(repo)
 
         sut.findById(repo.id).test().assertValue {
             it.repoId == repo.id
@@ -96,36 +91,5 @@ class RepoDaoTest {
                     && it.ownerName == owner.name
                     && it.ownerAvatar == owner.avatar
         }
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun loadRepoAndOwner_SHOULD_return_a_Map_of_the_Repo_and_its_Owner() {
-        val owner = OwnerEntity(
-            id = 5,
-            name = "Benito",
-            avatar = null
-        )
-
-        val repo = RepoEntity(
-            id = 1,
-            name = "name",
-            fullName = "full name",
-            description = "description",
-            stars = 500,
-            forks = 10,
-            language = "english",
-            homepage = null,
-            ownerId = owner.id
-        )
-
-        ownerDao.insert(owner).test().assertValue(owner.id)
-        sut.insert(repo).test().assertValue(repo.id)
-
-        sut.loadRepoAndOwner().test()
-            .assertValue {
-                val key = it.keys.first()
-                key == repo && it[key] == owner
-            }
     }
 }

@@ -2,11 +2,12 @@ package com.benitobertoli.androidplayground.data.mapper
 
 import com.benitobertoli.androidplayground.data.network.dto.OwnerDto
 import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class OwnerMapperTest {
+class OwnerDtoToOwnerMapperTest {
 
-    private val sut = OwnerMapper()
+    private val sut = OwnerDtoToOwnerMapper()
 
     @Test
     fun `map SHOULD map all fields`() {
@@ -19,9 +20,9 @@ class OwnerMapperTest {
         val result = sut.map(owner)
 
         with(result) {
-            Truth.assertThat(id).isEqualTo(owner.id)
-            Truth.assertThat(name).isEqualTo(owner.name)
-            Truth.assertThat(avatar).isEqualTo(owner.avatar)
+            assertThat(id).isEqualTo(owner.id)
+            assertThat(name).isEqualTo(owner.name)
+            assertThat(avatar).isEqualTo(owner.avatar)
         }
     }
 }

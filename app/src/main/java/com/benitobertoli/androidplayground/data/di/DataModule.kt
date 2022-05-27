@@ -1,13 +1,21 @@
 package com.benitobertoli.androidplayground.data.di
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.rxjava2.RxRemoteMediator
 import com.benitobertoli.androidplayground.core.ListMapper
 import com.benitobertoli.androidplayground.core.ListMapperImpl
 import com.benitobertoli.androidplayground.core.Mapper
-import com.benitobertoli.androidplayground.data.mapper.OwnerMapper
-import com.benitobertoli.androidplayground.data.mapper.RepoMapper
+import com.benitobertoli.androidplayground.data.mapper.OwnerDtoToOwnerMapper
+import com.benitobertoli.androidplayground.data.mapper.RepoDtoToRepoMapper
+import com.benitobertoli.androidplayground.data.mapper.RepoToOwnerEntityMapper
+import com.benitobertoli.androidplayground.data.mapper.RepoToRepoEntityMapper
 import com.benitobertoli.androidplayground.data.network.di.NetworkModule
 import com.benitobertoli.androidplayground.data.network.dto.OwnerDto
 import com.benitobertoli.androidplayground.data.network.dto.RepoDto
+import com.benitobertoli.androidplayground.data.network.service.GithubRemoteMediator
+import com.benitobertoli.androidplayground.data.persistence.di.PersistenceModule
+import com.benitobertoli.androidplayground.data.persistence.entity.OwnerEntity
+import com.benitobertoli.androidplayground.data.persistence.entity.RepoEntity
 import com.benitobertoli.androidplayground.data.repository.GithubRepositoryImpl
 import com.benitobertoli.androidplayground.domain.model.Owner
 import com.benitobertoli.androidplayground.domain.model.Repo
@@ -16,17 +24,27 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [DataModule.ProvidesModule::class, NetworkModule::class])
+@Module(includes = [DataModule.ProvidesModule::class, NetworkModule::class, PersistenceModule::class])
 interface DataModule {
 
     @Binds
-    fun bindRepoMapper(impl: RepoMapper): Mapper<RepoDto, Repo>
+    fun bindRepoMapper(impl: RepoDtoToRepoMapper): Mapper<RepoDto, Repo>
 
     @Binds
-    fun bindOwnerMapper(impl: OwnerMapper): Mapper<OwnerDto, Owner>
+    fun bindOwnerMapper(impl: OwnerDtoToOwnerMapper): Mapper<OwnerDto, Owner>
+
+    @Binds
+    fun bindRepoToRepoEntityMapper(impl: RepoToRepoEntityMapper): Mapper<Repo, RepoEntity>
+
+    @Binds
+    fun bindRepoToOwnerEntityMapper(impl: RepoToOwnerEntityMapper): Mapper<Repo, OwnerEntity>
 
     @Binds
     fun bindGithubRepository(impl: GithubRepositoryImpl): GithubRepository
+
+    @OptIn(ExperimentalPagingApi::class)
+    @Binds
+    fun bindGithubRemoteMediator(impl: GithubRemoteMediator): RxRemoteMediator<Int, Repo>
 
     @Module
     object ProvidesModule {

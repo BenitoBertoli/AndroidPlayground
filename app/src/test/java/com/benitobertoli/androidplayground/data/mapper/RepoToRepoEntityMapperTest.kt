@@ -4,35 +4,36 @@ import com.benitobertoli.androidplayground.core.Mapper
 import com.benitobertoli.androidplayground.data.network.dto.OwnerDto
 import com.benitobertoli.androidplayground.data.network.dto.RepoDto
 import com.benitobertoli.androidplayground.domain.model.Owner
+import com.benitobertoli.androidplayground.domain.model.Repo
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
-class RepoMapperTest {
-
-    private val ownerMapper: Mapper<OwnerDto, Owner> = mock()
-    private val sut = RepoMapper(ownerMapper)
+class RepoToRepoEntityMapperTest {
+    private val sut = RepoToRepoEntityMapper()
 
     @Test
     fun `map SHOULD map all fields`() {
-        val ownerDto: OwnerDto = mock()
-        val expectedOwner: Owner = mock()
 
-        val repo = RepoDto(
+        val owner = Owner(
             123456789L,
-            "kotlin",
-            "JetBrains/kotlin",
-            "The Kotlin Programming Language",
-            33712,
-            4198,
-            "Kotlin",
-            "https://kotlinglang.org",
-            ownerDto
+            "JetBrains",
+            "some avatar"
         )
 
-        whenever(ownerMapper.map(ownerDto)).thenReturn(expectedOwner)
+        val repo = Repo(
+            id = 1,
+            name = "name",
+            fullName = "full name",
+            description = "description",
+            stars = 500,
+            forks = 10,
+            language = "english",
+            homepage = null,
+            owner = owner
+        )
 
         val result = sut.map(repo)
 
@@ -45,8 +46,7 @@ class RepoMapperTest {
             assertThat(forks).isEqualTo(repo.forks)
             assertThat(language).isEqualTo(repo.language)
             assertThat(homepage).isEqualTo(repo.homepage)
-            assertThat(owner).isEqualTo(expectedOwner)
-            verify(ownerMapper).map(repo.owner)
+            assertThat(ownerId).isEqualTo(owner.id)
         }
     }
 }

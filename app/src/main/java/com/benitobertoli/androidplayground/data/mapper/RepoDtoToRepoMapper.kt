@@ -7,7 +7,7 @@ import com.benitobertoli.androidplayground.domain.model.Owner
 import com.benitobertoli.androidplayground.domain.model.Repo
 import javax.inject.Inject
 
-class RepoMapper @Inject constructor(
+class RepoDtoToRepoMapper @Inject constructor(
     private val ownerMapper: Mapper<OwnerDto, Owner>
 ) : Mapper<RepoDto, Repo> {
     override fun map(input: RepoDto): Repo {
