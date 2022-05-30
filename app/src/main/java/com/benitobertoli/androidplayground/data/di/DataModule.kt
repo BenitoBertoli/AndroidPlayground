@@ -5,10 +5,7 @@ import androidx.paging.rxjava2.RxRemoteMediator
 import com.benitobertoli.androidplayground.core.ListMapper
 import com.benitobertoli.androidplayground.core.ListMapperImpl
 import com.benitobertoli.androidplayground.core.Mapper
-import com.benitobertoli.androidplayground.data.mapper.OwnerDtoToOwnerMapper
-import com.benitobertoli.androidplayground.data.mapper.RepoDtoToRepoMapper
-import com.benitobertoli.androidplayground.data.mapper.RepoToOwnerEntityMapper
-import com.benitobertoli.androidplayground.data.mapper.RepoToRepoEntityMapper
+import com.benitobertoli.androidplayground.data.mapper.*
 import com.benitobertoli.androidplayground.data.network.di.NetworkModule
 import com.benitobertoli.androidplayground.data.network.dto.OwnerDto
 import com.benitobertoli.androidplayground.data.network.dto.RepoDto
@@ -16,6 +13,7 @@ import com.benitobertoli.androidplayground.data.network.service.GithubRemoteMedi
 import com.benitobertoli.androidplayground.data.persistence.di.PersistenceModule
 import com.benitobertoli.androidplayground.data.persistence.entity.OwnerEntity
 import com.benitobertoli.androidplayground.data.persistence.entity.RepoEntity
+import com.benitobertoli.androidplayground.data.persistence.entity.RepoWithOwner
 import com.benitobertoli.androidplayground.data.repository.GithubRepositoryImpl
 import com.benitobertoli.androidplayground.domain.model.Owner
 import com.benitobertoli.androidplayground.domain.model.Repo
@@ -40,6 +38,9 @@ interface DataModule {
     fun bindRepoToOwnerEntityMapper(impl: RepoToOwnerEntityMapper): Mapper<Repo, OwnerEntity>
 
     @Binds
+    fun bindRepoWithOwnerToRepoMapper(impl: RepoWithOwnerToRepoMapper): Mapper<RepoWithOwner, Repo>
+
+    @Binds
     fun bindGithubRepository(impl: GithubRepositoryImpl): GithubRepository
 
     @OptIn(ExperimentalPagingApi::class)
@@ -51,6 +52,11 @@ interface DataModule {
 
         @Provides
         fun provideRepoListMapper(innerMapper: Mapper<RepoDto, Repo>): ListMapper<RepoDto, Repo> {
+            return ListMapperImpl(innerMapper)
+        }
+
+        @Provides
+        fun provideRepoWithOwnerListMapper(innerMapper: Mapper<RepoWithOwner, Repo>): ListMapper<RepoWithOwner, Repo> {
             return ListMapperImpl(innerMapper)
         }
 

@@ -1,7 +1,6 @@
 package com.benitobertoli.androidplayground.data.mapper
 
 import com.benitobertoli.androidplayground.data.network.dto.OwnerDto
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

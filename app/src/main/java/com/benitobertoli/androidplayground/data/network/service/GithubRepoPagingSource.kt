@@ -1,40 +1,36 @@
 package com.benitobertoli.androidplayground.data.network.service
 
+import android.util.Log
+import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.paging.rxjava2.RxPagingSource
-import com.benitobertoli.androidplayground.core.AppSchedulers
 import com.benitobertoli.androidplayground.core.ListMapper
-import com.benitobertoli.androidplayground.data.network.dto.RepoDto
+import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
+import com.benitobertoli.androidplayground.data.persistence.entity.RepoWithOwner
 import com.benitobertoli.androidplayground.domain.model.Repo
-import io.reactivex.Single
 import javax.inject.Inject
-
-private const val GITHUB_FIRST_PAGE = 1
 
 class GithubRepoPagingSource
 @Inject
 constructor(
-    private val githubApi: GithubApi,
-    private val mapper: ListMapper<RepoDto, Repo>,
-    private val appSchedulers: AppSchedulers
-) : RxPagingSource<Int, Repo>() {
 
-    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, Repo>> {
-        val page = params.key ?: GITHUB_FIRST_PAGE
-        return githubApi.searchRepositories(page, params.loadSize)
-            .subscribeOn(appSchedulers.backgroundScheduler)
-            .observeOn(appSchedulers.foregroundScheduler)
-            .map { mapper.map(it.items) }
-            .map {
+    private val database: GithubDatabase,
+    private val mapper: ListMapper<RepoWithOwner, Repo>
+) : PagingSource<Int, Repo>() {
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Repo> {
+        val loadResult = database.repoDao().pagingSource().load(params)
+        Log.d("Benito", loadResult.toString())
+        return when (loadResult) {
+
+            is LoadResult.Page ->
                 LoadResult.Page(
-                    data = it,
-                    prevKey = if (page == GITHUB_FIRST_PAGE) null else page - 1,
-                    nextKey = if (it.isEmpty()) null else page + 1
-                ) as LoadResult<Int, Repo>
-            }
-            .onErrorReturn {
-                LoadResult.Error(it)
-            }
+                    data = mapper.map(loadResult.data),
+                    prevKey = loadResult.prevKey,
+                    nextKey = loadResult.nextKey
+                )
+            is LoadResult.Error -> LoadResult.Error(loadResult.throwable)
+            is LoadResult.Invalid -> LoadResult.Invalid()
+        }
     }
 
     override fun getRefreshKey(state: PagingState<Int, Repo>): Int? {

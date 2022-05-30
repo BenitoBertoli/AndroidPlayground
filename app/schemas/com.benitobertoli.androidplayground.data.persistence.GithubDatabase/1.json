@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5fa761d8a41f72b120463ce2492226be",
+    "identityHash": "fe7a8c6465f506addc1f9d93b6aab52e",
     "entities": [
       {
         "tableName": "repositories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`repo_id` INTEGER NOT NULL, `repo_name` TEXT, `repo_full_name` TEXT, `repo_description` TEXT, `repo_stars` INTEGER NOT NULL, `repo_forks` INTEGER NOT NULL, `repo_language` TEXT, `repo_homepage` TEXT, `repo_owner_id` INTEGER NOT NULL, PRIMARY KEY(`repo_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`repo_id` INTEGER NOT NULL, `repo_name` TEXT NOT NULL, `repo_full_name` TEXT NOT NULL, `repo_description` TEXT, `repo_stars` INTEGER NOT NULL, `repo_forks` INTEGER NOT NULL, `repo_language` TEXT, `repo_homepage` TEXT, `repo_owner_id` INTEGER NOT NULL, PRIMARY KEY(`repo_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -18,13 +18,13 @@
             "fieldPath": "name",
             "columnName": "repo_name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "fullName",
             "columnName": "repo_full_name",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "description",
@@ -140,7 +140,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5fa761d8a41f72b120463ce2492226be')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fe7a8c6465f506addc1f9d93b6aab52e')"
     ]
   }
 }

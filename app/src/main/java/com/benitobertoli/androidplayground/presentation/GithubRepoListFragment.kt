@@ -1,20 +1,25 @@
 package com.benitobertoli.androidplayground.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
+import androidx.paging.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
 import com.benitobertoli.androidplayground.databinding.FragmentGithubRepoListBinding
 import com.benitobertoli.androidplayground.presentation.adapter.RepoListAdapter
 import com.benitobertoli.androidplayground.presentation.adapter.RepoListLoadStateAdapter
 import com.benitobertoli.androidplayground.presentation.viewmodel.GithubRepoListViewModel
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class GithubRepoListFragment : DaggerFragment() {
@@ -24,11 +29,14 @@ class GithubRepoListFragment : DaggerFragment() {
     @Inject
     lateinit var repoListViewModel: GithubRepoListViewModel
 
+    @Inject
+    lateinit var githubDatabase: GithubDatabase
+
     private val adapter = RepoListAdapter { repo ->
         findNavController().navigate(GithubRepoListFragmentDirections.actionGithubRepoListFragmentToGithubRepoDetailsFragment(repo))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentGithubRepoListBinding.inflate(layoutInflater)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -44,9 +52,29 @@ class GithubRepoListFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        repoListViewModel.pagingData.observe(viewLifecycleOwner, Observer {
-            it?.let { adapter.submitData(lifecycle, it) }
-        })
+
+// sanity check to test if a pagingsource without an intermediary model works
+//        val pager = Pager(
+//            config = PagingConfig(
+//                pageSize = 5,
+//                enablePlaceholders = false,
+//            ),
+//            pagingSourceFactory = { githubDatabase.repoDao().repoPagingSource() }
+//        )
+//
+//        lifecycle.coroutineScope.launch {
+//            pager.flow.collectLatest{
+//                Log.d("Benito", "data changed $it")
+//            }
+//        }
+
+
+        repoListViewModel.pagingData.observe(viewLifecycleOwner) {
+            it?.let {
+                Log.d("Benito", "new paging data")
+                adapter.submitData(lifecycle, it)
+            }
+        }
 
         repoListViewModel.getRepositories()
 

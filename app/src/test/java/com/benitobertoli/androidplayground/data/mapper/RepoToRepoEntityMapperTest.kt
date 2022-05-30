@@ -1,14 +1,8 @@
 package com.benitobertoli.androidplayground.data.mapper
 
-import com.benitobertoli.androidplayground.core.Mapper
-import com.benitobertoli.androidplayground.data.network.dto.OwnerDto
-import com.benitobertoli.androidplayground.data.network.dto.RepoDto
 import com.benitobertoli.androidplayground.domain.model.Owner
 import com.benitobertoli.androidplayground.domain.model.Repo
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
 class RepoToRepoEntityMapperTest {

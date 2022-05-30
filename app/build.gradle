@@ -119,5 +119,7 @@ dependencies {
     androidTestImplementation "com.google.truth:truth:$versions.truth"
     androidTestImplementation "androidx.room:room-testing:$versions.room"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutinesTest"
+    androidTestImplementation "com.jraska.livedata:testing-ktx:$versions.liveDataTesting"
+    androidTestImplementation 'app.cash.turbine:turbine:0.8.0'
 
 }

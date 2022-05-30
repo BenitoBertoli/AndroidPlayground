@@ -2,7 +2,6 @@ package com.benitobertoli.androidplayground.data.mapper
 
 import com.benitobertoli.androidplayground.domain.model.Owner
 import com.benitobertoli.androidplayground.domain.model.Repo
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

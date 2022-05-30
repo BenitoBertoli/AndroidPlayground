@@ -11,9 +11,9 @@ data class RepoEntity(
     @ColumnInfo(name = RepoContract.ID)
     val id: Long,
     @ColumnInfo(name = RepoContract.NAME)
-    val name: String?,
+    val name: String,
     @ColumnInfo(name = RepoContract.FULL_NAME)
-    val fullName: String?,
+    val fullName: String,
     @ColumnInfo(name = RepoContract.DESCRIPTION)
     val description: String?,
     @ColumnInfo(name = RepoContract.STARS)

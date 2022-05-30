@@ -40,9 +40,15 @@ interface RepoDao {
     )
     fun findById(id: Long): Maybe<RepoWithOwner>
 
-    @Query(QUERY_SELECT_REPO_W_OWNER)
+    @Query(
+        QUERY_SELECT_REPO_W_OWNER +
+                " ORDER BY rep. ${RepoContract.STARS} DESC"
+    )
     fun pagingSource(): PagingSource<Int, RepoWithOwner>
 
     @Query("DELETE FROM ${RepoContract.TABLE_NAME}")
-    fun clearAll() : Int
+    fun clearAll(): Int
+
+    @Query("SELECT * FROM ${RepoContract.TABLE_NAME} ORDER BY ${RepoContract.STARS} DESC")
+    fun repoPagingSource(): PagingSource<Int, RepoEntity>
 }
