@@ -45,7 +45,7 @@ interface DataModule {
 
     @OptIn(ExperimentalPagingApi::class)
     @Binds
-    fun bindGithubRemoteMediator(impl: GithubRemoteMediator): RxRemoteMediator<Int, Repo>
+    fun bindGithubRemoteMediator(impl: GithubRemoteMediator): RxRemoteMediator<Int, RepoWithOwner>
 
     @Module
     object ProvidesModule {

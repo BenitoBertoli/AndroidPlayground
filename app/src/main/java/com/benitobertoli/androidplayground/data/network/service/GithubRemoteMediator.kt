@@ -13,6 +13,7 @@ import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
 import com.benitobertoli.androidplayground.data.persistence.entity.OwnerEntity
 import com.benitobertoli.androidplayground.data.persistence.entity.RemoteKeys
 import com.benitobertoli.androidplayground.data.persistence.entity.RepoEntity
+import com.benitobertoli.androidplayground.data.persistence.entity.RepoWithOwner
 import com.benitobertoli.androidplayground.domain.model.Repo
 import io.reactivex.Single
 import javax.inject.Inject
@@ -30,26 +31,24 @@ constructor(
 
     private val githubDatabase: GithubDatabase,
     private val appSchedulers: AppSchedulers
-) : RxRemoteMediator<Int, Repo>() {
+) : RxRemoteMediator<Int, RepoWithOwner>() {
 
     override fun initializeSingle(): Single<InitializeAction> {
         return Single.just(InitializeAction.LAUNCH_INITIAL_REFRESH)
     }
 
-    override fun loadSingle(loadType: LoadType, state: PagingState<Int, Repo>): Single<MediatorResult> =
+    override fun loadSingle(loadType: LoadType, state: PagingState<Int, RepoWithOwner>): Single<MediatorResult> =
         Single.just(loadType)
             .subscribeOn(appSchedulers.backgroundScheduler)
             .flatMap {
                 val page = when (it) {
                     LoadType.REFRESH -> {
                         val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                        Log.d("Benito",  "refresh - " +  remoteKeys?.toString())
                         remoteKeys?.nextKey?.minus(1) ?: GITHUB_FIRST_PAGE
                     }
                     LoadType.PREPEND -> {
                         val remoteKeys = getRemoteKeyForFirstItem(state)
 
-                        Log.d("Benito",  "prepend - " +  remoteKeys?.toString())
                         val prevKey = remoteKeys?.prevKey
                             ?: return@flatMap Single.just(MediatorResult.Success(endOfPaginationReached = remoteKeys != null))
                         prevKey
@@ -57,7 +56,6 @@ constructor(
 
                     LoadType.APPEND -> {
                         val remoteKeys = getRemoteKeyForLastItem(state)
-                        Log.d("Benito",  "append - " +  remoteKeys?.toString())
                         val nextKey = remoteKeys?.nextKey
                             ?: return@flatMap Single.just(MediatorResult.Success(endOfPaginationReached = remoteKeys != null))
                         nextKey
@@ -69,7 +67,6 @@ constructor(
                         repoDtoToRepo.map(response.items)
                     }.map { repos ->
                         val endOfPaginationReached = repos.isEmpty()
-                        Log.d("Benito", "end of pagination reached: $endOfPaginationReached")
                         githubDatabase.runInTransaction {
                             if (loadType == LoadType.REFRESH) {
                                 githubDatabase.remoteKeysDao().clearAll()
@@ -87,7 +84,6 @@ constructor(
                                 githubDatabase.repoDao().insert(repoToRepoEntity.map(repo))
                             }
                         }
-                        Log.d("Benito", MediatorResult.Success(endOfPaginationReached = endOfPaginationReached).toString())
                         MediatorResult.Success(endOfPaginationReached = endOfPaginationReached) as MediatorResult
                     }.onErrorReturn { error ->
                         error.printStackTrace()
@@ -98,25 +94,25 @@ constructor(
                 MediatorResult.Error(it)
             }
 
-    private fun getRemoteKeyForLastItem(state: PagingState<Int, Repo>): RemoteKeys? {
+    private fun getRemoteKeyForLastItem(state: PagingState<Int, RepoWithOwner>): RemoteKeys? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { repo ->
-                githubDatabase.remoteKeysDao().remoteKeysRepoId(repo.id)
+                githubDatabase.remoteKeysDao().remoteKeysRepoId(repo.repoId)
             }
     }
 
-    private fun getRemoteKeyForFirstItem(state: PagingState<Int, Repo>): RemoteKeys? {
+    private fun getRemoteKeyForFirstItem(state: PagingState<Int, RepoWithOwner>): RemoteKeys? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { repo ->
-                githubDatabase.remoteKeysDao().remoteKeysRepoId(repo.id)
+                githubDatabase.remoteKeysDao().remoteKeysRepoId(repo.repoId)
             }
     }
 
     private fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, Repo>
+        state: PagingState<Int, RepoWithOwner>
     ): RemoteKeys? {
         return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { repoId ->
+            state.closestItemToPosition(position)?.repoId?.let { repoId ->
                 githubDatabase.remoteKeysDao().remoteKeysRepoId(repoId)
             }
         }

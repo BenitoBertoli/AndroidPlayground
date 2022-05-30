@@ -2,6 +2,8 @@ package com.benitobertoli.androidplayground.presentation.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
+import com.benitobertoli.androidplayground.core.Mapper
+import com.benitobertoli.androidplayground.data.persistence.entity.RepoWithOwner
 import com.benitobertoli.androidplayground.domain.model.Repo
 import com.benitobertoli.androidplayground.domain.repository.GithubRepository
 import com.nhaarman.mockitokotlin2.mock
@@ -23,15 +25,16 @@ class GithubRepoListViewModelImplTest {
     val rule = InstantTaskExecutorRule()
 
     private val githubRepository: GithubRepository = mock()
+    private val mapper: Mapper<RepoWithOwner, Repo> = mock()
     private val testDispatcher = TestCoroutineDispatcher()
     private val coroutineScope = TestCoroutineScope(testDispatcher)
 
-    private val sut = GithubRepoListViewModelImpl(githubRepository, coroutineScope)
+    private val sut = GithubRepoListViewModelImpl(githubRepository, coroutineScope, mapper)
 
     @Test
     fun `getRepositories SHOULD subscribe WHEN pagingData has no value`() {
-        val repos: List<Repo> = mock()
-        val expectedData: PagingData<Repo> = PagingData.from(repos)
+        val repos: List<RepoWithOwner> = mock()
+        val expectedData: PagingData<RepoWithOwner> = PagingData.from(repos)
 
         whenever(githubRepository.getRepositories()).thenReturn(
             Flowable.just(expectedData)

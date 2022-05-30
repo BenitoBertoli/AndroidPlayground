@@ -5,9 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.*
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
@@ -16,10 +17,8 @@ import com.benitobertoli.androidplayground.presentation.adapter.RepoListAdapter
 import com.benitobertoli.androidplayground.presentation.adapter.RepoListLoadStateAdapter
 import com.benitobertoli.androidplayground.presentation.viewmodel.GithubRepoListViewModel
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 class GithubRepoListFragment : DaggerFragment() {
@@ -42,7 +41,6 @@ class GithubRepoListFragment : DaggerFragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         binding.recyclerView.adapter = adapter.withLoadStateFooter(RepoListLoadStateAdapter { adapter.retry() })
-        adapter.addLoadStateListener { handleLoadStates(it) }
 
         binding.retryButton.setOnClickListener { repoListViewModel.getRepositories(refresh = true) }
 
@@ -52,28 +50,18 @@ class GithubRepoListFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-// sanity check to test if a pagingsource without an intermediary model works
-//        val pager = Pager(
-//            config = PagingConfig(
-//                pageSize = 5,
-//                enablePlaceholders = false,
-//            ),
-//            pagingSourceFactory = { githubDatabase.repoDao().repoPagingSource() }
-//        )
-//
-//        lifecycle.coroutineScope.launch {
-//            pager.flow.collectLatest{
-//                Log.d("Benito", "data changed $it")
-//            }
-//        }
-
-
         repoListViewModel.pagingData.observe(viewLifecycleOwner) {
             it?.let {
-                Log.d("Benito", "new paging data")
                 adapter.submitData(lifecycle, it)
             }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow
+                .distinctUntilChanged()
+                .collectLatest {
+                    handleLoadStates(it)
+                }
         }
 
         repoListViewModel.getRepositories()
@@ -82,10 +70,17 @@ class GithubRepoListFragment : DaggerFragment() {
     }
 
     private fun handleLoadStates(loadState: CombinedLoadStates) {
-        when (loadState.source.refresh) {
+        if (adapter.itemCount > 0) {
+            binding.viewFlipper.displayedChild = INDEX_CONTENT
+            return
+        }
+
+        when (loadState.refresh) {
             is LoadState.NotLoading -> binding.viewFlipper.displayedChild = INDEX_CONTENT
             is LoadState.Loading -> binding.viewFlipper.displayedChild = INDEX_LOADING
-            is LoadState.Error -> binding.viewFlipper.displayedChild = INDEX_ERROR
+            is LoadState.Error -> {
+                binding.viewFlipper.displayedChild = INDEX_ERROR
+            }
         }
     }
 
