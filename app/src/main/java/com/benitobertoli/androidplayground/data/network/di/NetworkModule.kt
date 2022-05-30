@@ -1,11 +1,8 @@
 package com.benitobertoli.androidplayground.data.network.di
 
-import androidx.paging.PagingSource
 import com.benitobertoli.androidplayground.data.network.service.GithubApi
-import com.benitobertoli.androidplayground.data.network.service.GithubRepoPagingSource
 import com.benitobertoli.androidplayground.data.network.service.GithubService
 import com.benitobertoli.androidplayground.data.network.service.GithubServiceImpl
-import com.benitobertoli.androidplayground.domain.model.Repo
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,9 +18,6 @@ interface NetworkModule {
 
     @Binds
     fun bindGithubService(impl: GithubServiceImpl): GithubService
-
-    @Binds
-    fun bindGithubRepoPagingSource(impl: GithubRepoPagingSource): PagingSource<Int, Repo>
 
     @Module
     object ProvidesModule {

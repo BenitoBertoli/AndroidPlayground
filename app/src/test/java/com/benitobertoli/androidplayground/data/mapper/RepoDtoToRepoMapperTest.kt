@@ -10,10 +10,10 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 
-class RepoMapperTest {
+class RepoDtoToRepoMapperTest {
 
     private val ownerMapper: Mapper<OwnerDto, Owner> = mock()
-    private val sut = RepoMapper(ownerMapper)
+    private val sut = RepoDtoToRepoMapper(ownerMapper)
 
     @Test
     fun `map SHOULD map all fields`() {
