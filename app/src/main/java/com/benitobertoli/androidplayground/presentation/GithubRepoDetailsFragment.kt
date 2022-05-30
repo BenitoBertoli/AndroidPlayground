@@ -12,10 +12,11 @@ import com.benitobertoli.androidplayground.databinding.FragmentRepositoryDetails
 
 class GithubRepoDetailsFragment : Fragment() {
 
-    private lateinit var binding: FragmentRepositoryDetailsBinding
+    private var _binding: FragmentRepositoryDetailsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentRepositoryDetailsBinding.inflate(layoutInflater)
+        _binding = FragmentRepositoryDetailsBinding.inflate(layoutInflater)
         val repository = arguments?.let { args ->
             GithubRepoDetailsFragmentArgs.fromBundle(args).repository
         } ?: throw IllegalStateException("Tried to open GithubRepoDetailsFragment without passing a repo object")
@@ -38,5 +39,10 @@ class GithubRepoDetailsFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

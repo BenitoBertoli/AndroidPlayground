@@ -1,7 +1,6 @@
 package com.benitobertoli.androidplayground.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
 import com.benitobertoli.androidplayground.databinding.FragmentGithubRepoListBinding
 import com.benitobertoli.androidplayground.presentation.adapter.RepoListAdapter
@@ -19,11 +19,14 @@ import com.benitobertoli.androidplayground.presentation.viewmodel.GithubRepoList
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 class GithubRepoListFragment : DaggerFragment() {
 
-    private lateinit var binding: FragmentGithubRepoListBinding
+    private var _binding: FragmentGithubRepoListBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var repoListViewModel: GithubRepoListViewModel
@@ -36,13 +39,35 @@ class GithubRepoListFragment : DaggerFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentGithubRepoListBinding.inflate(layoutInflater)
+        _binding = FragmentGithubRepoListBinding.inflate(layoutInflater)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         binding.recyclerView.adapter = adapter.withLoadStateFooter(RepoListLoadStateAdapter { adapter.retry() })
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
         binding.retryButton.setOnClickListener { repoListViewModel.getRepositories(refresh = true) }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow
+                .distinctUntilChanged()
+                .collectLatest {
+                    handleLoadStates(it)
+                }
+        }
+
+        // https://github.com/googlecodelabs/android-paging/issues/149
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow
+                .distinctUntilChanged { old, new ->
+                    old.mediator?.prepend?.endOfPaginationReached ==
+                            new.mediator?.prepend?.endOfPaginationReached}
+                .filter { it.refresh is LoadState.NotLoading && it.prepend.endOfPaginationReached && !it.append.endOfPaginationReached}
+                .collect {
+                    // todo: don't scroll to top if user has already scrolled
+                    binding.recyclerView.scrollToPosition(0)
+                }
+        }
 
         return binding.root
     }
@@ -54,14 +79,6 @@ class GithubRepoListFragment : DaggerFragment() {
             it?.let {
                 adapter.submitData(lifecycle, it)
             }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            adapter.loadStateFlow
-                .distinctUntilChanged()
-                .collectLatest {
-                    handleLoadStates(it)
-                }
         }
 
         repoListViewModel.getRepositories()
@@ -82,6 +99,11 @@ class GithubRepoListFragment : DaggerFragment() {
                 binding.viewFlipper.displayedChild = INDEX_ERROR
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private companion object {
