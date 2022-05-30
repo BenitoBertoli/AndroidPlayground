@@ -2,20 +2,12 @@ package com.benitobertoli.androidplayground.data.persistence.dao
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.benitobertoli.androidplayground.data.persistence.GithubDatabase
 import com.benitobertoli.androidplayground.data.persistence.entity.OwnerEntity
 import com.benitobertoli.androidplayground.data.persistence.entity.RepoEntity
-import com.benitobertoli.androidplayground.data.persistence.entity.RepoWithOwner
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -76,7 +68,6 @@ class RepoDaoTest {
     @Throws(Exception::class)
     fun writeRepo() {
         val result = sut.insert(repo)
-
         assertThat(result).isEqualTo(repo.id)
     }
 
@@ -100,55 +91,4 @@ class RepoDaoTest {
                     && it.ownerAvatar == owner.avatar
         }
     }
-
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    @Throws(Exception::class)
-//    fun pagingSource() = runTest(UnconfinedTestDispatcher()) {
-//        val pager = Pager(
-//            config = PagingConfig(
-//                pageSize = 30,
-//                enablePlaceholders = false,
-//            ),
-//            pagingSourceFactory = { sut.pagingSource() }
-//        )
-//
-//        val expected = RepoWithOwner(
-//            repo.id,
-//            repo.name,
-//            repo.fullName,
-//            repo.description,
-//            repo.stars,
-//            repo.forks,
-//            repo.language,
-//            repo.homepage,
-//            repo.ownerId,
-//            owner.name,
-//            owner.avatar
-//        )
-//
-//       // db.runInTransaction {
-//            ownerDao.insert(owner)
-//            sut.insert(repo)
-//       // }
-//
-//        val result = sut.pagingSource().load(
-//            PagingSource.LoadParams.Refresh(
-//                key = null,
-//                loadSize = 1,
-//                placeholdersEnabled = false
-//            ))
-//
-//        assertThat(
-//
-//            result
-//        ).isEqualTo(
-//            PagingSource.LoadResult.Page(
-//                data = listOf(expected),
-//                nextKey = null,
-//                prevKey = null
-//            )
-//        )
-//
-//    }
 }
